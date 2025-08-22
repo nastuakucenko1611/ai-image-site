@@ -1,37 +1,32 @@
-const goBtn = document.getElementById("go");
-const statusEl = document.getElementById("status");
-const imgEl = document.getElementById("result");
-const dlEl = document.getElementById("download");
-const openEl = document.getElementById("open");
+const generateBtn = document.getElementById("generate");
+const promptInput = document.getElementById("prompt");
+const resultDiv = document.getElementById("result");
 
-goBtn.onclick = async () => {
-  const prompt = document.getElementById("prompt").value;
-  const size = document.getElementById("size").value;
-  if (!prompt) return alert("Введите запрос!");
+generateBtn.addEventListener("click", async () => {
+  const prompt = promptInput.value.trim();
+  if (!prompt) return alert("Введите описание картинки!");
 
-  statusEl.textContent = "Генерация...";
-  imgEl.style.display = "none";
-  dlEl.style.display = "none";
-  openEl.style.display = "none";
+  resultDiv.innerHTML = "Генерация...";
 
   try {
     const res = await fetch("/api/generate", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ prompt, size }),
+      body: JSON.stringify({ prompt })
     });
-    const data = await res.json();
-    if (data.error) throw new Error(data.error);
 
-    const url = "data:image/png;base64," + data.image_b64;
-    imgEl.src = url;
-    imgEl.style.display = "block";
-    dlEl.href = url;
-    dlEl.style.display = "inline-block";
-    openEl.href = url;
-    openEl.style.display = "inline-block";
-    statusEl.textContent = "Готово!";
-  } catch (e) {
-    statusEl.textContent = "Ошибка: " + e.message;
+    const data = await res.json();
+
+    if (data.error) {
+      resultDiv.innerHTML = "Ошибка: " + data.error;
+    } else {
+      const img = document.createElement("img");
+      img.src = "data:image/png;base64," + data.image_b64;
+      resultDiv.innerHTML = "";
+      resultDiv.appendChild(img);
+    }
+  } catch (err) {
+    console.error(err);
+    resultDiv.innerHTML = "Ошибка сервера!";
   }
-};
+});};
