@@ -1,0 +1,9 @@
+{
+  "name": "AI Image",
+  "short_name": "AI Image",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#0f172a",
+  "theme_color": "#111827",
+  "icons": []
+}
