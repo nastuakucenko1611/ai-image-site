@@ -14,8 +14,7 @@ export default async function handler(req, res) {
       body: JSON.stringify({
         model: "gpt-image-1",
         prompt,
-        size,
-        response_format: "b64_json"
+        size
       })
     });
     const data = await apiRes.json();
